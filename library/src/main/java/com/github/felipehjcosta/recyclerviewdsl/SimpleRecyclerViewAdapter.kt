@@ -8,18 +8,18 @@ import android.view.ViewGroup
 
 internal class SimpleRecyclerViewAdapter(
         private val items: List<Any?>,
-        private val layoutResId: Int,
-        private val bindMap: SparseArray<(item: Any?, view: View?) -> Unit>
+        private val layoutBinds: SparseArray<RecyclerViewAdapterBindDslBuilder>
 ) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerView>() {
 
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleRecyclerView {
-        val view = LayoutInflater.from(parent.context).inflate(layoutResId, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(layoutBinds.keyAt(0), parent, false)
         return SimpleRecyclerView(view)
     }
 
     override fun onBindViewHolder(holder: SimpleRecyclerView, position: Int) {
+        val bindMap = layoutBinds.valueAt(0).bindMap
         val item = items[position]
         val id = bindMap.keyAt(0)
         val view = holder.itemView.findViewById<View>(id)

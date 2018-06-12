@@ -11,11 +11,10 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewDslBuilder.() 
     val builder = RecyclerViewDslBuilder(recyclerView.context)
     block(builder)
     builder.layoutManager?.let { recyclerView.layoutManager = it }
-    builder.recyclerViewAdapterDsl?.bindDsl?.let {
+    builder.recyclerViewAdapterDsl?.layoutBinds?.let {
         recyclerView.adapter = SimpleRecyclerViewAdapter(
                 builder.recyclerViewAdapterDsl?.items ?: emptyList(),
-                it.layoutResId,
-                it.bindMap
+                it
         )
     }
 }
@@ -34,16 +33,17 @@ class RecyclerViewDslBuilder(private val context: Context) {
     }
 }
 
-class RecyclerViewAdapterDslBuilder(internal val items: List<Any?>) {
-
-    internal var bindDsl: RecyclerViewAdapterBindDslBuilder? = null
+class RecyclerViewAdapterDslBuilder(
+        internal val items: List<Any?>,
+        internal val layoutBinds: SparseArray<RecyclerViewAdapterBindDslBuilder> = SparseArray()
+) {
 
     fun bind(layoutResId: Int, block: RecyclerViewAdapterBindDslBuilder.() -> Unit) {
-        bindDsl = RecyclerViewAdapterBindDslBuilder(layoutResId).apply(block)
+        layoutBinds.put(layoutResId, RecyclerViewAdapterBindDslBuilder().apply(block))
     }
 }
 
-class RecyclerViewAdapterBindDslBuilder(internal val layoutResId: Int) {
+class RecyclerViewAdapterBindDslBuilder {
     internal val bindMap = SparseArray<(item: Any?, view: View?) -> Unit>()
 
     fun <ITEM : Any, VIEW : View> append(id: Int,
