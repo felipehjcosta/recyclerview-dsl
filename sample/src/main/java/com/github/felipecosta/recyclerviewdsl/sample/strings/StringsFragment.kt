@@ -51,8 +51,4 @@ class StringsFragment : Fragment() {
             }
         }
     }
-
-    companion object {
-        fun newInstance() = StringsFragment()
-    }
 }
