@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-internal class SimpleRecyclerViewAdapter(
+internal class SimpleRecyclerViewAdapter private constructor(
         private val items: List<Any?>,
-        private val layoutBinds: SparseArray<RecyclerViewAdapterBindDslBuilder>
+        private val layoutBinds: SparseArray<RecyclerViewAdapterBindDslBuilder<out Any>>
 ) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerView>() {
 
     override fun getItemCount(): Int = items.size
@@ -32,4 +32,18 @@ internal class SimpleRecyclerViewAdapter(
     }
 
     internal class SimpleRecyclerView(view: View) : RecyclerView.ViewHolder(view)
+
+    companion object {
+        fun newInstance(items: List<Any?>,
+                        layoutBinds: SparseArray<out RecyclerViewAdapterBindDslBuilder<out Any>>): SimpleRecyclerViewAdapter {
+            val layoutBindsWithoutOut = SparseArray<RecyclerViewAdapterBindDslBuilder<out Any>>().apply {
+                for (i in 0 until layoutBinds.size()) {
+                    val key = layoutBinds.keyAt(i)
+                    val obj = layoutBinds.get(key)
+                    put(key, obj)
+                }
+            }
+            return SimpleRecyclerViewAdapter(items, layoutBindsWithoutOut)
+        }
+    }
 }

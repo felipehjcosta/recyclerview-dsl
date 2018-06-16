@@ -12,7 +12,7 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewDslBuilder.() 
     block(builder)
     builder.layoutManager?.let { recyclerView.layoutManager = it }
     builder.recyclerViewAdapterDsl?.layoutBinds?.let {
-        recyclerView.adapter = SimpleRecyclerViewAdapter(
+        recyclerView.adapter = SimpleRecyclerViewAdapter.newInstance(
                 builder.recyclerViewAdapterDsl?.items ?: emptyList(),
                 it
         )
@@ -22,42 +22,50 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewDslBuilder.() 
 class RecyclerViewDslBuilder(private val context: Context) {
     internal var layoutManager: RecyclerView.LayoutManager? = null
 
-    internal var recyclerViewAdapterDsl: RecyclerViewAdapterDslBuilder? = null
+    internal var recyclerViewAdapterDsl: RecyclerViewAdapterDslBuilder<out Any>? = null
 
     fun withLinearLayout(block: LinearLayoutManager.() -> Unit) {
         layoutManager = LinearLayoutManager(context).apply(block)
     }
 
-    fun withItems(items: List<Any?>, block: RecyclerViewAdapterDslBuilder.() -> Unit) {
-        recyclerViewAdapterDsl = RecyclerViewAdapterDslBuilder(items).apply(block)
+    fun <ITEM : Any> withTypedItems(items: List<ITEM?>,
+                                    itemType: KClass<ITEM>,
+                                    block: RecyclerViewAdapterDslBuilder<ITEM>.() -> Unit) {
+        recyclerViewAdapterDsl = RecyclerViewAdapterDslBuilder(items, itemType).apply(block)
+    }
+
+    inline fun <reified ITEM : Any> withItems(items: List<ITEM?>, noinline block: RecyclerViewAdapterDslBuilder<ITEM>.() -> Unit) {
+        withTypedItems(items, ITEM::class, block)
     }
 }
 
-class RecyclerViewAdapterDslBuilder(
-        internal val items: List<Any?>,
-        internal val layoutBinds: SparseArray<RecyclerViewAdapterBindDslBuilder> = SparseArray()
+class RecyclerViewAdapterDslBuilder<ITEM : Any>(
+        internal val items: List<ITEM?>,
+        private val itemType: KClass<ITEM>,
+        internal val layoutBinds: SparseArray<RecyclerViewAdapterBindDslBuilder<ITEM>> = SparseArray()
 ) {
 
-    fun bind(layoutResId: Int, block: RecyclerViewAdapterBindDslBuilder.() -> Unit) {
-        layoutBinds.put(layoutResId, RecyclerViewAdapterBindDslBuilder().apply(block))
+    fun bind(layoutResId: Int, block: RecyclerViewAdapterBindDslBuilder<ITEM>.() -> Unit) {
+        layoutBinds.put(layoutResId, RecyclerViewAdapterBindDslBuilder(itemType).apply(block))
     }
 }
 
-class RecyclerViewAdapterBindDslBuilder {
+class RecyclerViewAdapterBindDslBuilder<ITEM : Any>(
+        internal val itemType: KClass<ITEM>
+) {
     internal val bindMap = SparseArray<(item: Any?, view: View?) -> Unit>()
 
-    fun <ITEM : Any, VIEW : View> append(id: Int,
-                                         block: (RecyclerViewAdapterBindItem<ITEM, VIEW>) -> Unit,
-                                         itemType: KClass<ITEM>,
-                                         viewType: KClass<VIEW>
+    fun <VIEW : View> append(id: Int,
+                             block: (RecyclerViewAdapterBindItem<ITEM, VIEW>) -> Unit,
+                             viewType: KClass<VIEW>
     ) {
         bindMap.append(id, RecyclerViewAdapterBindItemWrapper(block, itemType, viewType))
     }
 
-    inline fun <reified ITEM : Any, reified VIEW : View> on(
+    inline fun <reified VIEW : View> on(
             id: Int,
             noinline block: (RecyclerViewAdapterBindItem<ITEM, VIEW>) -> Unit) {
-        append(id, block, ITEM::class, VIEW::class)
+        append(id, block, VIEW::class)
     }
 
 }

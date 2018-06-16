@@ -32,11 +32,11 @@ class ObjectsFragment : Fragment() {
 
             withItems(items) {
                 bind(R.layout.objects_item_list) {
-                    on<DummyContent.DummyItem, TextView>(R.id.title) {
+                    on<TextView>(R.id.title) {
                         it.view?.text = it.item?.content
                     }
 
-                    on<DummyContent.DummyItem, TextView>(R.id.description) {
+                    on<TextView>(R.id.description) {
                         it.view?.text = it.item?.details
                     }
                 }

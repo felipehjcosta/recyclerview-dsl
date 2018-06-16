@@ -44,7 +44,7 @@ class StringsFragment : Fragment() {
 
             withItems(titles) {
                 bind(R.layout.strings_list_item) {
-                    on<String, TextView>(R.id.title) {
+                    on<TextView>(R.id.title) {
                         it.view?.text = it.item
                     }
                 }
