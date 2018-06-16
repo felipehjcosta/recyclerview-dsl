@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">recyclerviewktx</string>
+    <string name="app_name">DSL Sample</string>
+    <string name="nav_strings_sample_title">Strings Sample</string>
+    <string name="nav_objects_sample_title">Objects Sample</string>
 </resources>
