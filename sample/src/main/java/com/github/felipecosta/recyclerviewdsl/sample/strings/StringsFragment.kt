@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.github.felipecosta.recyclerviewdsl.R
 import com.github.felipehjcosta.recyclerviewdsl.onRecyclerView
 
@@ -46,6 +47,13 @@ class StringsFragment : Fragment() {
                 bind(R.layout.strings_list_item) {
                     on<TextView>(R.id.title) {
                         it.view?.text = it.item
+                    }
+
+                    onClick { position, string ->
+                        Toast.makeText(context,
+                                "Position $position clicked for item: ${string}",
+                                Toast.LENGTH_SHORT)
+                                .show()
                     }
                 }
             }

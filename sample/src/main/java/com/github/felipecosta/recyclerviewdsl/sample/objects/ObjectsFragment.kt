@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.github.felipecosta.recyclerviewdsl.R
 import com.github.felipehjcosta.recyclerviewdsl.onRecyclerView
 
@@ -38,6 +39,13 @@ class ObjectsFragment : Fragment() {
 
                     on<TextView>(R.id.description) {
                         it.view?.text = it.item?.details
+                    }
+
+                    onClick { position, item ->
+                        Toast.makeText(context,
+                                "Position $position clicked for item: ${item.content}",
+                                Toast.LENGTH_SHORT)
+                                .show()
                     }
                 }
             }

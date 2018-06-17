@@ -19,12 +19,16 @@ internal class SimpleRecyclerViewAdapter private constructor(
     }
 
     override fun onBindViewHolder(holder: SimpleRecyclerView, position: Int) {
-        val bindMap = layoutBinds.valueAt(holder.itemViewType).bindMap
+        val binder = layoutBinds.valueAt(holder.itemViewType)
+        val bindMap = binder.bindMap
         val item = items[position]
         val id = bindMap.keyAt(0)
         val view = holder.itemView.findViewById<View>(id)
         val block = bindMap.valueAt(0)
         block(item, view)
+        holder.itemView.setOnClickListener {
+            binder.onLayoutViewClicked(position, item)
+        }
     }
 
     override fun getItemViewType(position: Int): Int {

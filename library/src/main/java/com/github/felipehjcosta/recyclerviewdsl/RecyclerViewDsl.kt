@@ -54,6 +54,7 @@ class RecyclerViewAdapterBindDslBuilder<ITEM : Any>(
         internal val itemType: KClass<ITEM>
 ) {
     internal val bindMap = SparseArray<(item: Any?, view: View?) -> Unit>()
+    internal var onClickBlock: (Int, ITEM) -> Unit = { i: Int, item: ITEM -> }
 
     fun <VIEW : View> append(id: Int,
                              block: (RecyclerViewAdapterBindItem<ITEM, VIEW>) -> Unit,
@@ -66,6 +67,14 @@ class RecyclerViewAdapterBindDslBuilder<ITEM : Any>(
             id: Int,
             noinline block: (RecyclerViewAdapterBindItem<ITEM, VIEW>) -> Unit) {
         append(id, block, VIEW::class)
+    }
+
+    fun onClick(onClickBlock: (Int, ITEM) -> Unit) {
+        this.onClickBlock = onClickBlock
+    }
+
+    internal fun onLayoutViewClicked(position: Int, item: Any?) {
+        onClickBlock(position, itemType.java.cast(item))
     }
 
 }
