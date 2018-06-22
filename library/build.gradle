@@ -1,5 +1,19 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.novoda.bintray-release'
+
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
+publish {
+    userOrg = 'fcostaa'
+    groupId = 'com.github.felipehjcosta'
+    artifactId = 'recyclerview-dsl'
+    publishVersion = '0.1.0'
+    desc = 'RecyclerViewDSL'
+    website = 'https://github.com/felipehjcosta/recyclerview-dsl'
+}
 
 android {
     compileSdkVersion 27
