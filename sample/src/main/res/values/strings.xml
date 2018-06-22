@@ -2,4 +2,6 @@
     <string name="app_name">DSL Sample</string>
     <string name="nav_strings_sample_title">Strings Sample</string>
     <string name="nav_objects_sample_title">Objects Sample</string>
+    <string name="linear_layout">List</string>
+    <string name="grid_layout">Grid</string>
 </resources>

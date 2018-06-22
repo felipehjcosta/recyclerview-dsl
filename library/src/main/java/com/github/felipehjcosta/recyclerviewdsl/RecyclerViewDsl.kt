@@ -1,6 +1,7 @@
 package com.github.felipehjcosta.recyclerviewdsl
 
 import android.content.Context
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
@@ -26,6 +27,10 @@ class RecyclerViewDslBuilder(private val context: Context) {
 
     fun withLinearLayout(block: LinearLayoutManager.() -> Unit) {
         layoutManager = LinearLayoutManager(context).apply(block)
+    }
+
+    fun withGridLayoutManager(block: GridLayoutManager.() -> Unit) {
+        layoutManager = GridLayoutManager(context, 1).apply(block)
     }
 
     fun <ITEM : Any> withTypedItems(items: List<ITEM?>,
