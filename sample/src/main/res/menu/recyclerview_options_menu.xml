@@ -5,11 +5,11 @@
         <item
             android:id="@+id/action_linear_layout"
             android:title="@string/linear_layout"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="never" />
 
         <item
             android:id="@+id/action_grid_layout"
             android:title="@string/grid_layout"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="never" />
     </group>
 </menu>
