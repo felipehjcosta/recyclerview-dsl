@@ -69,7 +69,7 @@ class RecyclerViewAdapterDslBuilder<ITEM : Any>(
 class RecyclerViewAdapterBindDslBuilder<ITEM : Any>(
         internal val itemType: KClass<ITEM>
 ) {
-    internal val bindMap = SparseArray<(item: Any?, view: View?) -> Unit>()
+    internal val bindMap = SparseArray<((item: Any?, view: View?) -> Unit)?>()
     internal var onClickBlock: (Int, ITEM) -> Unit = { i: Int, item: ITEM -> }
 
     fun <VIEW : View> append(id: Int,

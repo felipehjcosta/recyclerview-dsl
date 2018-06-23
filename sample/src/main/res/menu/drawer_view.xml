@@ -9,5 +9,9 @@
             android:checked="false"
             android:id="@+id/nav_objects_sample"
             android:title="@string/nav_objects_sample_title" />
+        <item
+            android:checked="false"
+            android:id="@+id/nav_empty_sample"
+            android:title="@string/nav_empty_sample_title" />
     </group>
 </menu>

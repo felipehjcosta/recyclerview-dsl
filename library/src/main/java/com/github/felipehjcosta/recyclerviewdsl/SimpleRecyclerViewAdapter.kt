@@ -25,7 +25,7 @@ internal class SimpleRecyclerViewAdapter private constructor(
         val id = bindMap.keyAt(0)
         val view = holder.itemView.findViewById<View>(id)
         val block = bindMap.valueAt(0)
-        block(item, view)
+        block?.invoke(item, view)
         holder.itemView.setOnClickListener {
             binder.onLayoutViewClicked(position, item)
         }

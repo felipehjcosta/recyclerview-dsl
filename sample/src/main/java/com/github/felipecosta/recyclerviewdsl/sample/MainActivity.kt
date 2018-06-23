@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.github.felipecosta.recyclerviewdsl.R
+import com.github.felipecosta.recyclerviewdsl.sample.empty.EmptyFragment
 import com.github.felipecosta.recyclerviewdsl.sample.objects.ObjectsFragment
 import com.github.felipecosta.recyclerviewdsl.sample.strings.StringsFragment
 
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         val fragmentClassName = when (itemId) {
             R.id.nav_strings_sample -> StringsFragment::class.java.name
             R.id.nav_objects_sample -> ObjectsFragment::class.java.name
+            R.id.nav_empty_sample -> EmptyFragment::class.java.name
             else -> null
         }
         supportFragmentManager.beginTransaction()
