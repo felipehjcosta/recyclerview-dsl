@@ -10,7 +10,7 @@ publish {
     userOrg = 'fcostaa'
     groupId = 'com.github.felipehjcosta'
     artifactId = 'recyclerview-dsl'
-    publishVersion = '0.2.0'
+    publishVersion = '0.3.0'
     desc = 'RecyclerViewDSL'
     website = 'https://github.com/felipehjcosta/recyclerview-dsl'
 }
