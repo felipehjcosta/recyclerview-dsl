@@ -29,8 +29,19 @@ class RecyclerViewDslBuilder(private val context: Context) {
         layoutManager = LinearLayoutManager(context).apply(block)
     }
 
-    fun withGridLayoutManager(block: GridLayoutManager.() -> Unit) {
+    fun withGridLayout(block: GridLayoutManager.() -> Unit) {
         layoutManager = GridLayoutManager(context, 1).apply(block)
+    }
+
+    fun <LAYOUTMANAGER : RecyclerView.LayoutManager> withLayout(layoutManager: LAYOUTMANAGER) {
+        this.layoutManager = layoutManager
+    }
+
+    fun <LAYOUTMANAGER : RecyclerView.LayoutManager> withLayout(
+            layoutManager: LAYOUTMANAGER,
+            block: LAYOUTMANAGER.() -> Unit
+    ) {
+        this.layoutManager = layoutManager.apply(block)
     }
 
     fun <ITEM : Any> withTypedItems(items: List<ITEM?>,

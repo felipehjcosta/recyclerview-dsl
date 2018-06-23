@@ -97,7 +97,7 @@ class StringsFragment : Fragment() {
     private fun changeToRecyclerViewToGridLayout() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
-            withGridLayoutManager {
+            withGridLayout {
                 orientation = LinearLayout.VERTICAL
                 reverseLayout = false
                 spanCount = 2
