@@ -22,10 +22,12 @@ internal class SimpleRecyclerViewAdapter private constructor(
         val binder = layoutBinds.valueAt(holder.itemViewType)
         val bindMap = binder.bindMap
         val item = items[position]
-        val id = bindMap.keyAt(0)
-        val view = holder.itemView.findViewById<View>(id)
-        val block = bindMap.valueAt(0)
-        block?.invoke(item, view)
+        for (i in 0 until bindMap.size()) {
+            val id = bindMap.keyAt(i)
+            val view = holder.itemView.findViewById<View>(id)
+            val block = bindMap.valueAt(i)
+            block?.invoke(item, view)
+        }
         holder.itemView.setOnClickListener {
             binder.onLayoutViewClicked(position, item)
         }
