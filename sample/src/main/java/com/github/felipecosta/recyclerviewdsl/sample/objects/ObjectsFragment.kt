@@ -34,8 +34,8 @@ class ObjectsFragment : Fragment() {
                 reverseLayout = false
             }
 
-            withItems(items) {
-                bind(R.layout.objects_item_list) {
+            bind(R.layout.objects_item_list) {
+                withItems(items) {
                     on<TextView>(R.id.title) {
                         it.view?.text = it.item?.content
                     }

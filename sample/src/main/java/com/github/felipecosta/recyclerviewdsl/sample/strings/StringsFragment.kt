@@ -47,8 +47,8 @@ class StringsFragment : Fragment() {
                 reverseLayout = false
             }
 
-            withItems(titles) {
-                bind(R.layout.strings_list_item) {
+            bind(R.layout.strings_list_item) {
+                withItems(titles) {
                     on<TextView>(R.id.title) {
                         it.view?.text = it.item
                     }
@@ -79,6 +79,14 @@ class StringsFragment : Fragment() {
                 changeToRecyclerViewToGridLayout()
                 true
             }
+            R.id.action_add_data -> {
+                addExtraData()
+                true
+            }
+            R.id.action_reset_data -> {
+                resetData()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -101,6 +109,48 @@ class StringsFragment : Fragment() {
                 orientation = LinearLayout.VERTICAL
                 reverseLayout = false
                 spanCount = 2
+            }
+        }
+    }
+
+    private fun addExtraData() {
+        val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
+        onRecyclerView(recyclerView) {
+            bind(R.layout.strings_list_item) {
+                addExtraItems(listOf("New Hero here"))
+            }
+        }
+    }
+
+    private fun resetData() {
+        val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
+        val titles = listOf(
+                "Spider-Man",
+                "Thor",
+                "Iron Main",
+                "Black Panther",
+                "Black Widow",
+                "Captain America",
+                "Captain Marvel",
+                "Falcon",
+                "Hank Pym",
+                "Hawkeye",
+                "Hulk")
+
+        onRecyclerView(recyclerView) {
+            bind(R.layout.strings_list_item) {
+                withItems(titles) {
+                    on<TextView>(R.id.title) {
+                        it.view?.text = it.item
+                    }
+
+                    onClick { position, string ->
+                        Toast.makeText(context,
+                                "Position $position clicked for item: ${string}",
+                                Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                }
             }
         }
     }

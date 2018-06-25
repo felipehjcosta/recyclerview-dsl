@@ -33,8 +33,8 @@ class EmptyFragment : Fragment() {
                 reverseLayout = false
             }
 
-            withItems(listOfNulls) {
-                bind(R.layout.empty_list_item) {
+            bind(R.layout.empty_list_item) {
+                withItems(listOfNulls) {
                 }
             }
         }
