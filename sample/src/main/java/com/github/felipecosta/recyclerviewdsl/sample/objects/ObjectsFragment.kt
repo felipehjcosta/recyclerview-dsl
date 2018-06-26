@@ -46,7 +46,7 @@ class ObjectsFragment : Fragment() {
 
                     onClick { position, item ->
                         Toast.makeText(context,
-                                "Position $position clicked for item: ${item.content}",
+                                "Position $position clicked for item: ${item?.content}",
                                 Toast.LENGTH_SHORT)
                                 .show()
                     }
@@ -54,7 +54,6 @@ class ObjectsFragment : Fragment() {
             }
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.recyclerview_options_menu, menu)

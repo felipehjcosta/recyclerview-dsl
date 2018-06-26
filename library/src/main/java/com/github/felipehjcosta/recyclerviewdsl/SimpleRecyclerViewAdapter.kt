@@ -6,29 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-internal class SimpleRecyclerViewAdapter private constructor(
-        private val layoutBinds: SparseArray<RecyclerViewAdapterBuilder>
+internal class SimpleRecyclerViewAdapter(
+        private val adapterConfigurationMapping: AdapterConfigurationMapping
 ) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerView>() {
 
-    override fun getItemCount(): Int = layoutBinds.valueAt(0).recyclerViewAdapterDsl?.items?.size
+    override fun getItemCount(): Int = adapterConfigurationMapping.valueAt(0).adapterConfigurationData?.items?.size
             ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleRecyclerView {
-        val view = LayoutInflater.from(parent.context).inflate(layoutBinds.keyAt(viewType), parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(adapterConfigurationMapping.keyAt(viewType), parent, false)
         return SimpleRecyclerView(view)
     }
 
     override fun onBindViewHolder(holder: SimpleRecyclerView, position: Int) {
-        val binder = layoutBinds.valueAt(holder.itemViewType)
+        val binder = adapterConfigurationMapping.valueAt(holder.itemViewType)
 
-        binder.recyclerViewAdapterDsl?.let {
-            val bindMap = it.bindMap
+        binder.adapterConfigurationData?.let {
+            val bindMap = it.adapterItemBinderMapping
             val item = it.items[position]
             for (i in 0 until bindMap.size()) {
                 val id = bindMap.keyAt(i)
                 val view = holder.itemView.findViewById<View>(id)
                 val block = bindMap.valueAt(i)
-                block?.invoke(item, view)
+                block?.bind(item, view)
             }
             holder.itemView.setOnClickListener { _ ->
                 it.onLayoutViewClicked(position, item)
@@ -40,21 +40,21 @@ internal class SimpleRecyclerViewAdapter private constructor(
         return 0
     }
 
-    fun update(newLayoutBinds: SparseArray<RecyclerViewAdapterBuilder>) {
+    fun update(newLayoutBinds: SparseArray<AdapterConfiguration>) {
         for (i in 0 until newLayoutBinds.size()) {
             val key = newLayoutBinds.keyAt(0)
             val newValue = newLayoutBinds.valueAt(0)
-            val currentValue = layoutBinds.get(key)
+            val currentValue = adapterConfigurationMapping.get(key)
             if (currentValue == null) {
-                layoutBinds.append(key, newValue)
+                adapterConfigurationMapping.append(key, newValue)
             } else {
-                newValue.recyclerViewAdapterDsl?.let {
-                    currentValue.recyclerViewAdapterDsl = it
+                newValue.adapterConfigurationData?.let {
+                    currentValue.adapterConfigurationData = it
                     notifyDataSetChanged()
                 }
-                newValue.extraDataBuilder?.let {
-                    currentValue.recyclerViewAdapterDsl?.items?.let {
-                        val newItems = newValue.extraDataBuilder?.items
+                newValue.adapterConfigurationExtraData?.let {
+                    currentValue.adapterConfigurationData?.items?.let {
+                        val newItems = newValue.adapterConfigurationExtraData?.items
                         if (newItems != null) {
                             it.addAll(newItems)
                         }
@@ -67,10 +67,4 @@ internal class SimpleRecyclerViewAdapter private constructor(
     }
 
     internal class SimpleRecyclerView(view: View) : RecyclerView.ViewHolder(view)
-
-    companion object {
-        fun newInstance(layoutBinds: SparseArray<RecyclerViewAdapterBuilder>): SimpleRecyclerViewAdapter {
-            return SimpleRecyclerViewAdapter(layoutBinds)
-        }
-    }
 }

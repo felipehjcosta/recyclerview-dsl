@@ -55,7 +55,7 @@ class StringsFragment : Fragment() {
 
                     onClick { position, string ->
                         Toast.makeText(context,
-                                "Position $position clicked for item: ${string}",
+                                "Position $position clicked for item: $string",
                                 Toast.LENGTH_SHORT)
                                 .show()
                     }
@@ -90,7 +90,6 @@ class StringsFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun changeToRecyclerViewToLinearLayout() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)

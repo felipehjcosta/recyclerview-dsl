@@ -59,7 +59,6 @@ class EmptyFragment : Fragment() {
         }
     }
 
-
     private fun changeToRecyclerViewToLinearLayout() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
