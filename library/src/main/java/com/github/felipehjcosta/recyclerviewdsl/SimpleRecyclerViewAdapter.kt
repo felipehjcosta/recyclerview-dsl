@@ -1,13 +1,12 @@
 package com.github.felipehjcosta.recyclerviewdsl
 
 import android.support.v7.widget.RecyclerView
-import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 internal class SimpleRecyclerViewAdapter(
-        private val adapterConfigurationMapping: AdapterConfigurationMapping
+        internal val adapterConfigurationMapping: AdapterConfigurationMapping
 ) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerView>() {
 
     override fun getItemCount(): Int = adapterConfigurationMapping.valueAt(0).adapterConfigurationData?.items?.size
@@ -40,7 +39,7 @@ internal class SimpleRecyclerViewAdapter(
         return 0
     }
 
-    fun update(newLayoutBinds: SparseArray<AdapterConfiguration>) {
+    fun update(newLayoutBinds: AdapterConfigurationMapping) {
         for (i in 0 until newLayoutBinds.size()) {
             val key = newLayoutBinds.keyAt(0)
             val newValue = newLayoutBinds.valueAt(0)

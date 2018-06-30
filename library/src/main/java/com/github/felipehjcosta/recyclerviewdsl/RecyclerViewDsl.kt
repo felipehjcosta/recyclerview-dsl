@@ -54,11 +54,10 @@ class RecyclerViewConfiguration(private val context: Context) {
     }
 }
 
-class AdapterConfiguration {
-
-    internal var adapterConfigurationData: AdapterConfigurationData<out Any>? = null
-
-    internal var adapterConfigurationExtraData: AdapterConfigurationExtraData<out Any>? = null
+data class AdapterConfiguration(
+        internal var adapterConfigurationData: AdapterConfigurationData<out Any>? = null,
+        internal var adapterConfigurationExtraData: AdapterConfigurationExtraData<out Any>? = null
+) {
 
     fun <ITEM : Any> withTypedItems(items: List<Any?>,
                                     itemType: KClass<ITEM>,
@@ -75,7 +74,7 @@ class AdapterConfiguration {
     }
 }
 
-class AdapterConfigurationData<ITEM : Any>(
+data class AdapterConfigurationData<ITEM : Any>(
         internal var items: MutableList<Any?>,
         private val itemType: KClass<ITEM>
 ) {
@@ -119,7 +118,7 @@ class AdapterConfigurationData<ITEM : Any>(
 
 }
 
-class AdapterConfigurationExtraData<ITEM : Any>(internal val items: List<ITEM?>)
+data class AdapterConfigurationExtraData<ITEM : Any>(internal val items: List<ITEM?>)
 
 data class AdapterItemBind<ITEM : Any, VIEW : View>(val item: ITEM?, val view: VIEW?)
 
@@ -127,7 +126,7 @@ interface AdapterItemBinder {
     fun bind(item: Any?, view: View?)
 }
 
-class TypeAdapterItemBinder<ITEM : Any, VIEW : View>(
+data class TypeAdapterItemBinder<ITEM : Any, VIEW : View>(
         private val block: (AdapterItemBind<ITEM, VIEW>) -> Unit,
         private val itemType: KClass<ITEM>,
         private val viewType: KClass<VIEW>
