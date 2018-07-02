@@ -7,17 +7,17 @@ import android.view.ViewGroup
 
 internal class SimpleRecyclerViewAdapter(
         internal val adapterConfigurationMapping: AdapterConfigurationMapping
-) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerView>() {
+) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerViewHolder>() {
 
     override fun getItemCount(): Int = adapterConfigurationMapping.valueAt(0).adapterConfigurationData?.items?.size
             ?: 0
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleRecyclerView {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleRecyclerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(adapterConfigurationMapping.keyAt(viewType), parent, false)
-        return SimpleRecyclerView(view)
+        return SimpleRecyclerViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: SimpleRecyclerView, position: Int) {
+    override fun onBindViewHolder(holder: SimpleRecyclerViewHolder, position: Int) {
         val binder = adapterConfigurationMapping.valueAt(holder.itemViewType)
 
         binder.adapterConfigurationData?.let {
@@ -40,30 +40,31 @@ internal class SimpleRecyclerViewAdapter(
     }
 
     fun update(newLayoutBinds: AdapterConfigurationMapping) {
-        for (i in 0 until newLayoutBinds.size()) {
-            val key = newLayoutBinds.keyAt(0)
-            val newValue = newLayoutBinds.valueAt(0)
-            val currentValue = adapterConfigurationMapping.get(key)
-            if (currentValue == null) {
-                adapterConfigurationMapping.append(key, newValue)
-            } else {
-                newValue.adapterConfigurationData?.let {
-                    currentValue.adapterConfigurationData = it
-                    notifyDataSetChanged()
-                }
-                newValue.adapterConfigurationExtraData?.let {
-                    currentValue.adapterConfigurationData?.items?.let {
-                        val newItems = newValue.adapterConfigurationExtraData?.items
-                        if (newItems != null) {
-                            it.addAll(newItems)
-                        }
-                        val positionStart = it.size
-                        notifyItemRangeInserted(positionStart, it.size)
-                    }
+        val key = newLayoutBinds.keyAt(0)
+        val newValue = newLayoutBinds.valueAt(0)
+        var currentValue = adapterConfigurationMapping.get(key)
+
+        if (currentValue == null) {
+            adapterConfigurationMapping.clear()
+            adapterConfigurationMapping.append(key, newValue)
+            currentValue = adapterConfigurationMapping.get(key)
+        }
+        newValue.adapterConfigurationData?.let {
+            currentValue.adapterConfigurationData = it
+            notifyDataSetChanged()
+        }
+        newValue.adapterConfigurationExtraData?.let {
+            currentValue.adapterConfigurationData?.items?.let {
+                val newItems = newValue.adapterConfigurationExtraData?.items
+                if (newItems != null) {
+                    val positionStart = it.size
+                    val itemCount = newItems.size
+                    it.addAll(newItems)
+                    notifyItemRangeInserted(positionStart, itemCount)
                 }
             }
         }
     }
 
-    internal class SimpleRecyclerView(view: View) : RecyclerView.ViewHolder(view)
+    internal inner class SimpleRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
