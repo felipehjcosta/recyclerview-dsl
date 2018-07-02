@@ -111,4 +111,30 @@ class RecyclerViewDslTest {
 
         assertThat(capturedConfiguration[android.R.layout.simple_list_item_1]).isEqualTo(expectedConfigurationExtraData)
     }
+
+    @Test
+    fun ensureAdapterIsNotTouchedWhenChangeLayout() {
+        val items = listOf("Spider-Man", "Thor", "Iron Main")
+
+        onRecyclerView(recyclerView) {
+            withLinearLayout()
+            bind(android.R.layout.simple_list_item_1) {
+                withItems(items) {
+                    on<TextView>(android.R.id.text1) {
+                        it.view?.text = it.item
+                    }
+                }
+            }
+        }
+
+        val mockAdapter = mockk<SimpleRecyclerViewAdapter>(relaxed = true)
+        recyclerView.adapter = mockAdapter
+
+        onRecyclerView(recyclerView) {
+            withGridLayout()
+        }
+
+        verify(exactly = 0) { mockAdapter.update(any()) }
+        assertThat(recyclerView.adapter).isEqualToComparingFieldByFieldRecursively(mockAdapter)
+    }
 }

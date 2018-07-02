@@ -16,11 +16,13 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewConfiguration.
         block(this)
         layoutManager?.let { recyclerView.layoutManager = it }
 
-        val adapter = recyclerView.adapter as? SimpleRecyclerViewAdapter?
-        if (adapter != null) {
-            adapter.update(adapterConfigurationMapping)
-        } else {
-            recyclerView.adapter = SimpleRecyclerViewAdapter(adapterConfigurationMapping)
+        adapterConfigurationMapping?.let {
+            val adapter = recyclerView.adapter as? SimpleRecyclerViewAdapter?
+            if (adapter != null) {
+                adapter.update(it)
+            } else {
+                recyclerView.adapter = SimpleRecyclerViewAdapter(it)
+            }
         }
     }
 }
@@ -28,7 +30,7 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewConfiguration.
 class RecyclerViewConfiguration(private val context: Context) {
     internal var layoutManager: RecyclerView.LayoutManager? = null
 
-    internal val adapterConfigurationMapping: AdapterConfigurationMapping = AdapterConfigurationMapping()
+    internal var adapterConfigurationMapping: AdapterConfigurationMapping? = null
 
     fun withLinearLayout(block: LinearLayoutManager.() -> Unit = {}) {
         layoutManager = LinearLayoutManager(context).apply(block)
@@ -50,7 +52,10 @@ class RecyclerViewConfiguration(private val context: Context) {
     }
 
     fun bind(layoutResId: Int, block: AdapterConfiguration.() -> Unit) {
-        adapterConfigurationMapping.put(layoutResId, AdapterConfiguration().apply(block))
+        if (adapterConfigurationMapping == null) {
+            adapterConfigurationMapping = AdapterConfigurationMapping()
+        }
+        adapterConfigurationMapping?.put(layoutResId, AdapterConfiguration().apply(block))
     }
 }
 
