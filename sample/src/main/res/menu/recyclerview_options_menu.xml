@@ -21,5 +21,10 @@
             android:id="@+id/action_reset_data"
             android:title="@string/reset_data"
             app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_change_data"
+            android:title="@string/change_data"
+            app:showAsAction="never" />
     </group>
 </menu>

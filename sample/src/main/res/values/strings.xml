@@ -7,4 +7,5 @@
     <string name="grid_layout">Grid</string>
     <string name="add_data">Add Data</string>
     <string name="reset_data">Reset Data</string>
+    <string name="change_data">Change Data</string>
 </resources>

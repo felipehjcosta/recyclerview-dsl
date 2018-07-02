@@ -87,6 +87,10 @@ class StringsFragment : Fragment() {
                 resetData()
                 true
             }
+            R.id.action_change_data -> {
+                changeData()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -140,6 +144,33 @@ class StringsFragment : Fragment() {
             bind(R.layout.strings_list_item) {
                 withItems(titles) {
                     on<TextView>(R.id.title) {
+                        it.view?.text = it.item
+                    }
+
+                    onClick { position, string ->
+                        Toast.makeText(context,
+                                "Position $position clicked for item: ${string}",
+                                Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun changeData() {
+        val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
+        val titles = listOf(
+                "Black Panther",
+                "Captain Marvel",
+                "Hank Pym",
+                "Spider-Man"
+        )
+
+        onRecyclerView(recyclerView) {
+            bind(android.R.layout.simple_list_item_1) {
+                withItems(titles) {
+                    on<TextView>(android.R.id.text1) {
                         it.view?.text = it.item
                     }
 
