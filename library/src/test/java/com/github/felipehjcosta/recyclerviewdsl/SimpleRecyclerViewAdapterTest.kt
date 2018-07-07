@@ -14,7 +14,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class SimpleRecyclerViewHolderAdapterTest {
+class SimpleRecyclerViewAdapterTest {
 
     private val activityController = Robolectric.buildActivity(Activity::class.java)
 
@@ -59,7 +59,9 @@ class SimpleRecyclerViewHolderAdapterTest {
         val spied = spyk(adapter)
 
         val extraAdapterConfigurationMapping = provideExtraConfiguration()
-        spied.update(extraAdapterConfigurationMapping)
+        val extraKey = android.R.layout.simple_list_item_1
+        val extraAdapterConfigurationExtraData = extraAdapterConfigurationMapping[extraKey]!!.adapterConfigurationExtraData!!
+        spied.addExtra(extraKey, extraAdapterConfigurationExtraData)
 
 
         val expectedItems = listOf("Spider-Man", "Thor", "Iron Main", "Hulk")
@@ -68,35 +70,25 @@ class SimpleRecyclerViewHolderAdapterTest {
         verify { spied.notifyItemRangeInserted(3, 1) }
     }
 
+
     @Test
-    fun ensureAdapterReplaceDataWhenReceivesDataMapping() {
+    fun ensureAdapterReplaceDataWhenUpdatesData() {
         val spied = spyk(adapter)
 
         val newItems = listOf("Hulk", "Captain America", "Hawkeye")
-        val newAdapterConfigurationMapping = provideConfiguration(newItems)
-        spied.update(newAdapterConfigurationMapping)
+        val key = android.R.layout.simple_list_item_1
+        val adapterConfigurationData = provideConfiguration(newItems)[key].adapterConfigurationData
+
+        spied.update(key, adapterConfigurationData!!)
 
         val currentAdapterConfiguration = adapter.adapterConfigurationMapping[android.R.layout.simple_list_item_1]
-        assertThat(currentAdapterConfiguration).isEqualTo(newAdapterConfigurationMapping[android.R.layout.simple_list_item_1])
-        verify { spied.notifyDataSetChanged() }
-    }
-
-    @Test
-    fun ensureAdapterReplaceDataWhenReceivesDifferentDataMapping() {
-        val spied = spyk(adapter)
-
-        val newAdapterConfigurationMapping = provideOtherConfiguration()
-        spied.update(newAdapterConfigurationMapping)
-
-        assertThat(adapter.adapterConfigurationMapping.size()).isOne()
-        val currentAdapterConfiguration = adapter.adapterConfigurationMapping[android.R.layout.simple_list_item_2]
-        assertThat(currentAdapterConfiguration).isEqualTo(newAdapterConfigurationMapping[android.R.layout.simple_list_item_2])
+        assertThat(currentAdapterConfiguration.adapterConfigurationData).isEqualTo(adapterConfigurationData)
         verify { spied.notifyDataSetChanged() }
     }
 
     private fun provideConfiguration(items: List<String> = listOf("Spider-Man", "Thor", "Iron Main")): AdapterConfigurationMapping {
         return AdapterConfigurationMapping().apply {
-            this.append(android.R.layout.simple_list_item_1, AdapterConfiguration().apply {
+            append(android.R.layout.simple_list_item_1, AdapterConfiguration().apply {
                 adapterConfigurationData = AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class).apply {
                     adapterItemBinderMapping.append(android.R.id.text1, mockAdapterItemBinder)
                 }
@@ -106,18 +98,8 @@ class SimpleRecyclerViewHolderAdapterTest {
 
     private fun provideExtraConfiguration(items: List<String> = listOf("Hulk")): AdapterConfigurationMapping {
         return AdapterConfigurationMapping().apply {
-            this.append(android.R.layout.simple_list_item_1, AdapterConfiguration().apply {
+            append(android.R.layout.simple_list_item_1, AdapterConfiguration().apply {
                 adapterConfigurationExtraData = AdapterConfigurationExtraData(items.map { it as Any? }.toMutableList())
-            })
-        }
-    }
-
-    private fun provideOtherConfiguration(items: List<String> = listOf("Hulk", "Captain America", "Hawkeye")): AdapterConfigurationMapping {
-        return AdapterConfigurationMapping().apply {
-            this.append(android.R.layout.simple_list_item_2, AdapterConfiguration().apply {
-                adapterConfigurationData = AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class).apply {
-                    adapterItemBinderMapping.append(android.R.id.text1, mockAdapterItemBinder)
-                }
             })
         }
     }

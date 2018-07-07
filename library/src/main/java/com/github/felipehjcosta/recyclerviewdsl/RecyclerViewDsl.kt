@@ -15,16 +15,64 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewConfiguration.
     RecyclerViewConfiguration(recyclerView.context).apply {
         block(this)
         layoutManager?.let { recyclerView.layoutManager = it }
+        adapterConfigurationMapping?.let { handleNewAdapterConfigurationMapping(recyclerView, it) }
+    }
+}
 
-        adapterConfigurationMapping?.let {
-            val adapter = recyclerView.adapter as? SimpleRecyclerViewAdapter?
-            if (adapter != null) {
-                adapter.update(it)
+private fun handleNewAdapterConfigurationMapping(
+        recyclerView: RecyclerView,
+        newAdapterConfigurationMapping: AdapterConfigurationMapping
+) {
+    val currentAdapter = recyclerView.adapter
+    when (currentAdapter) {
+        is SimpleRecyclerViewAdapter -> {
+            if (isContentEquals(currentAdapter, newAdapterConfigurationMapping)) {
+                updateAdapter(currentAdapter, newAdapterConfigurationMapping)
             } else {
-                recyclerView.adapter = SimpleRecyclerViewAdapter(it)
+                assignNewAdapter(recyclerView, newAdapterConfigurationMapping)
             }
         }
+        else -> assignNewAdapter(recyclerView, newAdapterConfigurationMapping)
     }
+}
+
+private fun assignNewAdapter(
+        recyclerView: RecyclerView,
+        newAdapterConfigurationMapping: AdapterConfigurationMapping
+) {
+    recyclerView.adapter = SimpleRecyclerViewAdapter(newAdapterConfigurationMapping)
+}
+
+private fun isContentEquals(
+        adapter: SimpleRecyclerViewAdapter,
+        newAdapterConfigurationMapping: AdapterConfigurationMapping
+): Boolean {
+    val currentAdapterConfigurationMapping = adapter.adapterConfigurationMapping
+
+    val newKeys = IntArray(newAdapterConfigurationMapping.size()) {
+        newAdapterConfigurationMapping.keyAt(it)
+    }
+    val currentKeys = IntArray(currentAdapterConfigurationMapping.size()) {
+        currentAdapterConfigurationMapping.keyAt(it)
+    }
+    return newKeys.contentEquals(currentKeys)
+}
+
+private fun updateAdapter(
+        adapter: SimpleRecyclerViewAdapter,
+        newAdapterConfigurationMapping: AdapterConfigurationMapping
+) {
+    adapter.adapterConfigurationMapping
+            .run { IntArray(size()) { adapter.adapterConfigurationMapping.keyAt(it) } }
+            .forEach { key ->
+                newAdapterConfigurationMapping.get(key)
+                        ?.adapterConfigurationData
+                        ?.let { adapter.update(key, it) }
+
+                newAdapterConfigurationMapping.get(key)
+                        ?.adapterConfigurationExtraData
+                        ?.let { adapter.addExtra(key, it) }
+            }
 }
 
 class RecyclerViewConfiguration(private val context: Context) {

@@ -66,8 +66,6 @@ class RecyclerViewDslTest {
 
     @Test
     fun ensureAdapterIsSetWhenDeclareItOnDSL() {
-        mockkConstructor(SimpleRecyclerViewAdapter::class)
-
         val items = listOf("Spider-Man", "Thor", "Iron Main")
 
         onRecyclerView(recyclerView) {
@@ -89,14 +87,25 @@ class RecyclerViewDslTest {
     }
 
     @Test
-    fun ensureAdapterIsUpdatedWhenDeclareItOnDSL() {
-        val extraItems = listOf("Spider-Man", "Thor", "Iron Main")
-
+    fun ensureAdapterIsReceivingNewDataWhenDeclareItOnDSL() {
         val mockAdapter = mockk<SimpleRecyclerViewAdapter>(relaxed = true)
-        val slot = slot<AdapterConfigurationMapping>()
-        every { mockAdapter.update(newLayoutBinds = capture(slot)) } just runs
+        val keySlot = slot<Int>()
+        val extraDataSlot = slot<AdapterConfigurationExtraData<out Any>>()
+        every { mockAdapter.addExtra(key = capture(keySlot), adapterConfigurationExtraData = capture(extraDataSlot)) } just runs
+
+        val items = listOf("Hulk")
+        val configuration = AdapterConfiguration().apply {
+            adapterConfigurationData = AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class)
+        }
+        val adapterConfigurationMapping = AdapterConfigurationMapping().apply {
+            append(android.R.layout.simple_list_item_1, configuration)
+        }
+
+        every { mockAdapter.adapterConfigurationMapping } returns adapterConfigurationMapping
+
         recyclerView.adapter = mockAdapter
 
+        val extraItems = listOf("Spider-Man", "Thor", "Iron Main")
         onRecyclerView(recyclerView) {
             bind(android.R.layout.simple_list_item_1) {
                 addExtraItems(extraItems)
@@ -107,13 +116,48 @@ class RecyclerViewDslTest {
             adapterConfigurationExtraData = AdapterConfigurationExtraData(extraItems)
         }
 
-        val capturedConfiguration = slot.captured
+        val capturedKeySlot = keySlot.captured
 
-        assertThat(capturedConfiguration[android.R.layout.simple_list_item_1]).isEqualTo(expectedConfigurationExtraData)
+        assertThat(android.R.layout.simple_list_item_1).isEqualTo(capturedKeySlot)
+
+        val capturedExtraDataSlot = extraDataSlot.captured
+        assertThat(expectedConfigurationExtraData.adapterConfigurationExtraData).isEqualTo(capturedExtraDataSlot)
     }
 
     @Test
-    fun ensureAdapterIsNotTouchedWhenChangeLayout() {
+    fun ensureAdapterIsUpdatedWhenDeclareItOnDSL() {
+        val items = listOf("Hulk")
+        onRecyclerView(recyclerView) {
+            bind(android.R.layout.simple_list_item_1) {
+                withItems(items) {
+                    on<TextView>(android.R.id.text1) {
+                        it.view?.text = it.item
+                    }
+                }
+            }
+        }
+
+        val spiedAdapter = spyk(recyclerView.adapter as SimpleRecyclerViewAdapter)
+        recyclerView.adapter = spiedAdapter
+
+        val newItems = listOf("Spider-Man", "Thor", "Iron Main")
+        onRecyclerView(recyclerView) {
+            bind(android.R.layout.simple_list_item_1) {
+                withItems(newItems) {
+                    on<TextView>(android.R.id.text1) {
+                        it.view?.text = it.item
+                    }
+                }
+            }
+        }
+
+        val expectedKey = android.R.layout.simple_list_item_1
+        val expectedAdapterConfigurationData = AdapterConfigurationData(newItems.map { it as Any? }.toMutableList(), String::class)
+        verify { spiedAdapter.update(expectedKey, expectedAdapterConfigurationData) }
+    }
+
+    @Test
+    fun ensureNewAdapterIsCreatedWhenChangeLayout() {
         val items = listOf("Spider-Man", "Thor", "Iron Main")
 
         onRecyclerView(recyclerView) {
@@ -127,14 +171,19 @@ class RecyclerViewDslTest {
             }
         }
 
-        val mockAdapter = mockk<SimpleRecyclerViewAdapter>(relaxed = true)
-        recyclerView.adapter = mockAdapter
+        val oldAdapter = recyclerView.adapter
 
         onRecyclerView(recyclerView) {
-            withGridLayout()
+            bind(android.R.layout.simple_list_item_2) {
+                withItems(items) {
+                    on<TextView>(android.R.id.text1) {
+                        it.view?.text = it.item
+                    }
+                }
+            }
         }
 
-        verify(exactly = 0) { mockAdapter.update(any()) }
-        assertThat(recyclerView.adapter).isEqualToComparingFieldByFieldRecursively(mockAdapter)
+        val actualAdapter = recyclerView.adapter
+        assertThat(actualAdapter).isNotEqualTo(oldAdapter)
     }
 }

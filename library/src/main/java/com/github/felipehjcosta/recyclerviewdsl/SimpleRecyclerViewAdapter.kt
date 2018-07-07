@@ -39,30 +39,18 @@ internal class SimpleRecyclerViewAdapter(
         return 0
     }
 
-    fun update(newLayoutBinds: AdapterConfigurationMapping) {
-        val key = newLayoutBinds.keyAt(0)
-        val newValue = newLayoutBinds.valueAt(0)
-        var currentValue = adapterConfigurationMapping.get(key)
+    fun update(key: Int, adapterConfigurationData: AdapterConfigurationData<out Any>) {
+        adapterConfigurationMapping.get(key).adapterConfigurationData = adapterConfigurationData
+        notifyDataSetChanged()
+    }
 
-        if (currentValue == null) {
-            adapterConfigurationMapping.clear()
-            adapterConfigurationMapping.append(key, newValue)
-            currentValue = adapterConfigurationMapping.get(key)
-        }
-        newValue.adapterConfigurationData?.let {
-            currentValue.adapterConfigurationData = it
-            notifyDataSetChanged()
-        }
-        newValue.adapterConfigurationExtraData?.let {
-            currentValue.adapterConfigurationData?.items?.let {
-                val newItems = newValue.adapterConfigurationExtraData?.items
-                if (newItems != null) {
-                    val positionStart = it.size
-                    val itemCount = newItems.size
-                    it.addAll(newItems)
-                    notifyItemRangeInserted(positionStart, itemCount)
-                }
-            }
+    fun addExtra(key: Int, adapterConfigurationExtraData: AdapterConfigurationExtraData<out Any>) {
+        adapterConfigurationMapping.get(key).adapterConfigurationData?.items?.let {
+            val newItems = adapterConfigurationExtraData.items
+            val positionStart = it.size
+            val itemCount = newItems.size
+            it.addAll(newItems)
+            notifyItemRangeInserted(positionStart, itemCount)
         }
     }
 
