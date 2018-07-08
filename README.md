@@ -1,4 +1,4 @@
-# recyclerview-ktx
+# RecyclerView DSL
 
 [![Build Status](https://travis-ci.org/felipehjcosta/recyclerview-dsl.svg?branch=master)](https://travis-ci.org/felipehjcosta/recyclerview-dsl)
 [![codecov](https://codecov.io/gh/felipehjcosta/recyclerview-dsl/branch/master/graph/badge.svg)](https://codecov.io/gh/felipehjcosta/recyclerview-dsl)
