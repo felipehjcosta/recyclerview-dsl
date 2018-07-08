@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: "com.vanniktech.android.junit.jacoco"
 
 tasks.withType(Javadoc).all {
     enabled = false
