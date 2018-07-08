@@ -44,3 +44,6 @@ before_script:
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 script: gradle/buildViaTravis.sh
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
