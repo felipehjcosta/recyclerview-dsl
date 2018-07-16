@@ -13,7 +13,7 @@ Usage
 val items = listOf(
         "Spider-Man",
         "Thor",
-        "Iron Main",
+        "Iron Man",
         "Black Panther",
         "Black Widow",
         "Captain America",

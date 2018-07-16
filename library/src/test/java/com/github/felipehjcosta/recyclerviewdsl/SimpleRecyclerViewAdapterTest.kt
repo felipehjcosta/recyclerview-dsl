@@ -64,7 +64,7 @@ class SimpleRecyclerViewAdapterTest {
         spied.addExtra(extraKey, extraAdapterConfigurationExtraData)
 
 
-        val expectedItems = listOf("Spider-Man", "Thor", "Iron Main", "Hulk")
+        val expectedItems = listOf("Spider-Man", "Thor", "Iron Man", "Hulk")
         val currentAdapterConfiguration = adapter.adapterConfigurationMapping.get(android.R.layout.simple_list_item_1)
         assertThat(currentAdapterConfiguration.adapterConfigurationData?.items).isEqualTo(expectedItems)
         verify { spied.notifyItemRangeInserted(3, 1) }
@@ -86,7 +86,7 @@ class SimpleRecyclerViewAdapterTest {
         verify { spied.notifyDataSetChanged() }
     }
 
-    private fun provideConfiguration(items: List<String> = listOf("Spider-Man", "Thor", "Iron Main")): AdapterConfigurationMapping {
+    private fun provideConfiguration(items: List<String> = listOf("Spider-Man", "Thor", "Iron Man")): AdapterConfigurationMapping {
         return AdapterConfigurationMapping().apply {
             append(android.R.layout.simple_list_item_1, AdapterConfiguration().apply {
                 adapterConfigurationData = AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class).apply {

@@ -66,7 +66,7 @@ class RecyclerViewDslTest {
 
     @Test
     fun ensureAdapterIsSetWhenDeclareItOnDSL() {
-        val items = listOf("Spider-Man", "Thor", "Iron Main")
+        val items = listOf("Spider-Man", "Thor", "Iron Man")
 
         onRecyclerView(recyclerView) {
             bind(android.R.layout.simple_list_item_1) {
@@ -105,7 +105,7 @@ class RecyclerViewDslTest {
 
         recyclerView.adapter = mockAdapter
 
-        val extraItems = listOf("Spider-Man", "Thor", "Iron Main")
+        val extraItems = listOf("Spider-Man", "Thor", "Iron Man")
         onRecyclerView(recyclerView) {
             bind(android.R.layout.simple_list_item_1) {
                 addExtraItems(extraItems)
@@ -140,7 +140,7 @@ class RecyclerViewDslTest {
         val spiedAdapter = spyk(recyclerView.adapter as SimpleRecyclerViewAdapter)
         recyclerView.adapter = spiedAdapter
 
-        val newItems = listOf("Spider-Man", "Thor", "Iron Main")
+        val newItems = listOf("Spider-Man", "Thor", "Iron Man")
         onRecyclerView(recyclerView) {
             bind(android.R.layout.simple_list_item_1) {
                 withItems(newItems) {
@@ -158,7 +158,7 @@ class RecyclerViewDslTest {
 
     @Test
     fun ensureNewAdapterIsCreatedWhenChangeLayout() {
-        val items = listOf("Spider-Man", "Thor", "Iron Main")
+        val items = listOf("Spider-Man", "Thor", "Iron Man")
 
         onRecyclerView(recyclerView) {
             withLinearLayout()
