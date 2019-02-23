@@ -1,19 +1,22 @@
 package com.github.felipehjcosta.recyclerviewdsl
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 internal class SimpleRecyclerViewAdapter(
-        internal val adapterConfigurationMapping: AdapterConfigurationMapping
+    internal val adapterConfigurationMapping: AdapterConfigurationMapping
 ) : RecyclerView.Adapter<SimpleRecyclerViewAdapter.SimpleRecyclerViewHolder>() {
 
-    override fun getItemCount(): Int = adapterConfigurationMapping.valueAt(0).adapterConfigurationData?.items?.size
+    override fun getItemCount(): Int =
+        adapterConfigurationMapping.valueAt(0).adapterConfigurationData?.items?.size
             ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimpleRecyclerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(adapterConfigurationMapping.keyAt(viewType), parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(adapterConfigurationMapping.keyAt(viewType), parent, false)
         return SimpleRecyclerViewHolder(view)
     }
 
@@ -40,18 +43,23 @@ internal class SimpleRecyclerViewAdapter(
     }
 
     fun update(key: Int, adapterConfigurationData: AdapterConfigurationData<out Any>) {
+        val oldList = adapterConfigurationMapping.get(key).adapterConfigurationData?.items?.toList()
+            ?: emptyList()
+        val newList = adapterConfigurationData.items.toList()
+        val result = DiffUtil.calculateDiff(AnyDiffCallback(oldList = oldList, newList = newList))
         adapterConfigurationMapping.get(key).adapterConfigurationData = adapterConfigurationData
-        notifyDataSetChanged()
+        result.dispatchUpdatesTo(this)
     }
 
     fun addExtra(key: Int, adapterConfigurationExtraData: AdapterConfigurationExtraData<out Any>) {
-        adapterConfigurationMapping.get(key).adapterConfigurationData?.items?.let {
-            val newItems = adapterConfigurationExtraData.items
-            val positionStart = it.size
-            val itemCount = newItems.size
-            it.addAll(newItems)
-            notifyItemRangeInserted(positionStart, itemCount)
-        }
+        val oldList = adapterConfigurationMapping.get(key).adapterConfigurationData?.items?.toList()
+            ?: emptyList()
+        val newList = adapterConfigurationMapping.get(key)
+            .adapterConfigurationData
+            ?.items
+            ?.apply { addAll(adapterConfigurationExtraData.items) }?.toList() ?: emptyList()
+        val result = DiffUtil.calculateDiff(AnyDiffCallback(oldList = oldList, newList = newList))
+        result.dispatchUpdatesTo(this)
     }
 
     internal inner class SimpleRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view)

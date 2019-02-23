@@ -83,7 +83,8 @@ class SimpleRecyclerViewAdapterTest {
 
         val currentAdapterConfiguration = adapter.adapterConfigurationMapping[android.R.layout.simple_list_item_1]
         assertThat(currentAdapterConfiguration.adapterConfigurationData).isEqualTo(adapterConfigurationData)
-        verify { spied.notifyDataSetChanged() }
+        verify { spied.notifyItemRangeRemoved(0, 3) }
+        verify { spied.notifyItemRangeInserted(0, 3) }
     }
 
     private fun provideConfiguration(items: List<String> = listOf("Spider-Man", "Thor", "Iron Man")): AdapterConfigurationMapping {

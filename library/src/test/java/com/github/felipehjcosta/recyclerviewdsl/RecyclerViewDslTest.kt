@@ -13,7 +13,6 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
-
 @RunWith(RobolectricTestRunner::class)
 class RecyclerViewDslTest {
 
@@ -79,11 +78,15 @@ class RecyclerViewDslTest {
         }
 
         val expectedConfiguration = AdapterConfiguration().apply {
-            adapterConfigurationData = AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class)
+            adapterConfigurationData =
+                AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class)
         }
 
-        val configuration = (recyclerView.adapter as SimpleRecyclerViewAdapter).adapterConfigurationMapping
-        assertThat(configuration[android.R.layout.simple_list_item_1]).isEqualTo(expectedConfiguration)
+        val configuration =
+            (recyclerView.adapter as SimpleRecyclerViewAdapter).adapterConfigurationMapping
+        assertThat(configuration[android.R.layout.simple_list_item_1]).isEqualTo(
+            expectedConfiguration
+        )
     }
 
     @Test
@@ -91,11 +94,17 @@ class RecyclerViewDslTest {
         val mockAdapter = mockk<SimpleRecyclerViewAdapter>(relaxed = true)
         val keySlot = slot<Int>()
         val extraDataSlot = slot<AdapterConfigurationExtraData<out Any>>()
-        every { mockAdapter.addExtra(key = capture(keySlot), adapterConfigurationExtraData = capture(extraDataSlot)) } just runs
+        every {
+            mockAdapter.addExtra(
+                key = capture(keySlot),
+                adapterConfigurationExtraData = capture(extraDataSlot)
+            )
+        } just runs
 
         val items = listOf("Hulk")
         val configuration = AdapterConfiguration().apply {
-            adapterConfigurationData = AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class)
+            adapterConfigurationData =
+                AdapterConfigurationData(items.map { it as Any? }.toMutableList(), String::class)
         }
         val adapterConfigurationMapping = AdapterConfigurationMapping().apply {
             append(android.R.layout.simple_list_item_1, configuration)
@@ -121,7 +130,9 @@ class RecyclerViewDslTest {
         assertThat(android.R.layout.simple_list_item_1).isEqualTo(capturedKeySlot)
 
         val capturedExtraDataSlot = extraDataSlot.captured
-        assertThat(expectedConfigurationExtraData.adapterConfigurationExtraData).isEqualTo(capturedExtraDataSlot)
+        assertThat(expectedConfigurationExtraData.adapterConfigurationExtraData).isEqualTo(
+            capturedExtraDataSlot
+        )
     }
 
     @Test
@@ -152,7 +163,8 @@ class RecyclerViewDslTest {
         }
 
         val expectedKey = android.R.layout.simple_list_item_1
-        val expectedAdapterConfigurationData = AdapterConfigurationData(newItems.map { it as Any? }.toMutableList(), String::class)
+        val expectedAdapterConfigurationData =
+            AdapterConfigurationData(newItems.map { it as Any? }.toMutableList(), String::class)
         verify { spiedAdapter.update(expectedKey, expectedAdapterConfigurationData) }
     }
 
