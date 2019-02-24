@@ -1,6 +1,6 @@
 package com.github.felipehjcosta.recyclerviewdsl
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 class AnyDiffCallback(
     private val oldList: List<Any?>,

@@ -1,11 +1,11 @@
 package com.github.felipehjcosta.recyclerviewdsl
 
 import android.content.Context
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlin.reflect.KClass
 
 typealias AdapterConfigurationMapping = SparseArray<AdapterConfiguration>
@@ -20,8 +20,8 @@ fun onRecyclerView(recyclerView: RecyclerView, block: RecyclerViewConfiguration.
 }
 
 private fun handleNewAdapterConfigurationMapping(
-        recyclerView: RecyclerView,
-        newAdapterConfigurationMapping: AdapterConfigurationMapping
+    recyclerView: RecyclerView,
+    newAdapterConfigurationMapping: AdapterConfigurationMapping
 ) {
     val currentAdapter = recyclerView.adapter
     when (currentAdapter) {
@@ -37,15 +37,15 @@ private fun handleNewAdapterConfigurationMapping(
 }
 
 private fun assignNewAdapter(
-        recyclerView: RecyclerView,
-        newAdapterConfigurationMapping: AdapterConfigurationMapping
+    recyclerView: RecyclerView,
+    newAdapterConfigurationMapping: AdapterConfigurationMapping
 ) {
     recyclerView.adapter = SimpleRecyclerViewAdapter(newAdapterConfigurationMapping)
 }
 
 private fun isContentEquals(
-        adapter: SimpleRecyclerViewAdapter,
-        newAdapterConfigurationMapping: AdapterConfigurationMapping
+    adapter: SimpleRecyclerViewAdapter,
+    newAdapterConfigurationMapping: AdapterConfigurationMapping
 ): Boolean {
     val currentAdapterConfigurationMapping = adapter.adapterConfigurationMapping
 
@@ -59,20 +59,20 @@ private fun isContentEquals(
 }
 
 private fun updateAdapter(
-        adapter: SimpleRecyclerViewAdapter,
-        newAdapterConfigurationMapping: AdapterConfigurationMapping
+    adapter: SimpleRecyclerViewAdapter,
+    newAdapterConfigurationMapping: AdapterConfigurationMapping
 ) {
     adapter.adapterConfigurationMapping
-            .run { IntArray(size()) { adapter.adapterConfigurationMapping.keyAt(it) } }
-            .forEach { key ->
-                newAdapterConfigurationMapping.get(key)
-                        ?.adapterConfigurationData
-                        ?.let { adapter.update(key, it) }
+        .run { IntArray(size()) { adapter.adapterConfigurationMapping.keyAt(it) } }
+        .forEach { key ->
+            newAdapterConfigurationMapping.get(key)
+                ?.adapterConfigurationData
+                ?.let { adapter.update(key, it) }
 
-                newAdapterConfigurationMapping.get(key)
-                        ?.adapterConfigurationExtraData
-                        ?.let { adapter.addExtra(key, it) }
-            }
+            newAdapterConfigurationMapping.get(key)
+                ?.adapterConfigurationExtraData
+                ?.let { adapter.addExtra(key, it) }
+        }
 }
 
 class RecyclerViewConfiguration(private val context: Context) {
@@ -93,8 +93,8 @@ class RecyclerViewConfiguration(private val context: Context) {
     }
 
     fun <LAYOUT : RecyclerView.LayoutManager> withLayout(
-            layoutManager: LAYOUT,
-            block: LAYOUT.() -> Unit = {}
+        layoutManager: LAYOUT,
+        block: LAYOUT.() -> Unit = {}
     ) {
         this.layoutManager = layoutManager.apply(block)
     }
@@ -108,17 +108,23 @@ class RecyclerViewConfiguration(private val context: Context) {
 }
 
 data class AdapterConfiguration(
-        internal var adapterConfigurationData: AdapterConfigurationData<out Any>? = null,
-        internal var adapterConfigurationExtraData: AdapterConfigurationExtraData<out Any>? = null
+    internal var adapterConfigurationData: AdapterConfigurationData<out Any>? = null,
+    internal var adapterConfigurationExtraData: AdapterConfigurationExtraData<out Any>? = null
 ) {
 
-    fun <ITEM : Any> withTypedItems(items: List<Any?>,
-                                    itemType: KClass<ITEM>,
-                                    block: AdapterConfigurationData<ITEM>.() -> Unit) {
-        adapterConfigurationData = AdapterConfigurationData(items.toMutableList(), itemType).apply(block)
+    fun <ITEM : Any> withTypedItems(
+        items: List<Any?>,
+        itemType: KClass<ITEM>,
+        block: AdapterConfigurationData<ITEM>.() -> Unit
+    ) {
+        adapterConfigurationData =
+            AdapterConfigurationData(items.toMutableList(), itemType).apply(block)
     }
 
-    inline fun <reified ITEM : Any> withItems(items: List<ITEM?>, noinline block: AdapterConfigurationData<ITEM>.() -> Unit) {
+    inline fun <reified ITEM : Any> withItems(
+        items: List<ITEM?>,
+        noinline block: AdapterConfigurationData<ITEM>.() -> Unit
+    ) {
         withTypedItems(items, ITEM::class, block)
     }
 
@@ -128,28 +134,30 @@ data class AdapterConfiguration(
 }
 
 data class AdapterConfigurationData<ITEM : Any>(
-        internal var items: MutableList<Any?>,
-        private val itemType: KClass<ITEM>
+    internal var items: MutableList<Any?>,
+    private val itemType: KClass<ITEM>
 ) {
 
     internal val adapterItemBinderMapping = AdapterItemBinderMapping()
-    private var onItemClickListener: OnItemClickListener<ITEM> = object : OnItemClickListener<ITEM> {
-        override fun onItemClick(position: Int, item: ITEM?) {
+    private var onItemClickListener: OnItemClickListener<ITEM> =
+        object : OnItemClickListener<ITEM> {
+            override fun onItemClick(position: Int, item: ITEM?) {
 
+            }
         }
-    }
 
     fun <VIEW : View> append(
-            id: Int,
-            viewType: KClass<VIEW>,
-            block: (AdapterItemBind<ITEM, VIEW>) -> Unit
+        id: Int,
+        viewType: KClass<VIEW>,
+        block: (AdapterItemBind<ITEM, VIEW>) -> Unit
     ) {
         adapterItemBinderMapping.append(id, TypeAdapterItemBinder(block, itemType, viewType))
     }
 
     inline fun <reified VIEW : View> on(
-            id: Int,
-            noinline block: (AdapterItemBind<ITEM, VIEW>) -> Unit) {
+        id: Int,
+        noinline block: (AdapterItemBind<ITEM, VIEW>) -> Unit
+    ) {
         append(id, VIEW::class, block)
     }
 
@@ -180,9 +188,9 @@ interface AdapterItemBinder {
 }
 
 data class TypeAdapterItemBinder<ITEM : Any, VIEW : View>(
-        private val block: (AdapterItemBind<ITEM, VIEW>) -> Unit,
-        private val itemType: KClass<ITEM>,
-        private val viewType: KClass<VIEW>
+    private val block: (AdapterItemBind<ITEM, VIEW>) -> Unit,
+    private val itemType: KClass<ITEM>,
+    private val viewType: KClass<VIEW>
 ) : AdapterItemBinder {
     override fun bind(item: Any?, view: View?) {
         block(AdapterItemBind(itemType.java.cast(item), viewType.java.cast(view)))

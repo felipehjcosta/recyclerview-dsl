@@ -1,17 +1,17 @@
 package com.github.felipecosta.recyclerviewdsl.sample
 
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.github.felipecosta.recyclerviewdsl.R
 import com.github.felipecosta.recyclerviewdsl.sample.empty.EmptyFragment
 import com.github.felipecosta.recyclerviewdsl.sample.objects.ObjectsFragment
 import com.github.felipecosta.recyclerviewdsl.sample.strings.StringsFragment
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
             else -> null
         }
         supportFragmentManager.beginTransaction()
-                .replace(R.id.content_frame, Fragment.instantiate(this, fragmentClassName))
-                .commit()
+            .replace(R.id.content_frame, Fragment.instantiate(this, fragmentClassName))
+            .commit()
     }
 
     private fun setupToolbar() {

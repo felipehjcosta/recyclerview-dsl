@@ -1,12 +1,11 @@
 package com.github.felipecosta.recyclerviewdsl.sample.strings
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.github.felipecosta.recyclerviewdsl.R
 import com.github.felipehjcosta.recyclerviewdsl.onRecyclerView
 
@@ -18,8 +17,10 @@ class StringsFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.recyclerview_fragment, container, false)
     }
 
@@ -29,21 +30,22 @@ class StringsFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
 
         val titles = listOf(
-                "Spider-Man",
-                "Thor",
-                "Iron Man",
-                "Black Panther",
-                "Black Widow",
-                "Captain America",
-                "Captain Marvel",
-                "Falcon",
-                "Hank Pym",
-                "Hawkeye",
-                "Hulk")
+            "Spider-Man",
+            "Thor",
+            "Iron Man",
+            "Black Panther",
+            "Black Widow",
+            "Captain America",
+            "Captain Marvel",
+            "Falcon",
+            "Hank Pym",
+            "Hawkeye",
+            "Hulk"
+        )
 
         onRecyclerView(recyclerView) {
             withLinearLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
             }
 
@@ -54,10 +56,12 @@ class StringsFragment : Fragment() {
                     }
 
                     onClick { position, string ->
-                        Toast.makeText(context,
-                                "Position $position clicked for item: $string",
-                                Toast.LENGTH_SHORT)
-                                .show()
+                        Toast.makeText(
+                            context,
+                            "Position $position clicked for item: $string",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     }
                 }
             }
@@ -99,7 +103,7 @@ class StringsFragment : Fragment() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
             withLinearLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
             }
         }
@@ -109,7 +113,7 @@ class StringsFragment : Fragment() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
             withGridLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
                 spanCount = 2
             }
@@ -128,17 +132,18 @@ class StringsFragment : Fragment() {
     private fun resetData() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         val titles = listOf(
-                "Spider-Man",
-                "Thor",
-                "Iron Man",
-                "Black Panther",
-                "Black Widow",
-                "Captain America",
-                "Captain Marvel",
-                "Falcon",
-                "Hank Pym",
-                "Hawkeye",
-                "Hulk")
+            "Spider-Man",
+            "Thor",
+            "Iron Man",
+            "Black Panther",
+            "Black Widow",
+            "Captain America",
+            "Captain Marvel",
+            "Falcon",
+            "Hank Pym",
+            "Hawkeye",
+            "Hulk"
+        )
 
         onRecyclerView(recyclerView) {
             bind(R.layout.strings_list_item) {
@@ -148,10 +153,12 @@ class StringsFragment : Fragment() {
                     }
 
                     onClick { position, string ->
-                        Toast.makeText(context,
-                                "Position $position clicked for item: ${string}",
-                                Toast.LENGTH_SHORT)
-                                .show()
+                        Toast.makeText(
+                            context,
+                            "Position $position clicked for item: ${string}",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     }
                 }
             }
@@ -161,10 +168,10 @@ class StringsFragment : Fragment() {
     private fun changeData() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         val titles = listOf(
-                "Black Panther",
-                "Captain Marvel",
-                "Hank Pym",
-                "Spider-Man"
+            "Black Panther",
+            "Captain Marvel",
+            "Hank Pym",
+            "Spider-Man"
         )
 
         onRecyclerView(recyclerView) {
@@ -175,10 +182,12 @@ class StringsFragment : Fragment() {
                     }
 
                     onClick { position, string ->
-                        Toast.makeText(context,
-                                "Position $position clicked for item: ${string}",
-                                Toast.LENGTH_SHORT)
-                                .show()
+                        Toast.makeText(
+                            context,
+                            "Position $position clicked for item: ${string}",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     }
                 }
             }

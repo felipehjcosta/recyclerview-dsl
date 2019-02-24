@@ -1,10 +1,10 @@
 package com.github.felipehjcosta.recyclerviewdsl
 
 import android.app.Activity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before

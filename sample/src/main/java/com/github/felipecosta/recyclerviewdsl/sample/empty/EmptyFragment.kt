@@ -1,10 +1,9 @@
 package com.github.felipecosta.recyclerviewdsl.sample.empty
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.github.felipecosta.recyclerviewdsl.R
 import com.github.felipehjcosta.recyclerviewdsl.onRecyclerView
 
@@ -15,8 +14,10 @@ class EmptyFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.recyclerview_fragment, container, false)
     }
 
@@ -29,7 +30,7 @@ class EmptyFragment : Fragment() {
 
         onRecyclerView(recyclerView) {
             withLinearLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
             }
 
@@ -63,7 +64,7 @@ class EmptyFragment : Fragment() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
             withLinearLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
             }
         }
@@ -73,7 +74,7 @@ class EmptyFragment : Fragment() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
             withGridLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
                 spanCount = 2
             }

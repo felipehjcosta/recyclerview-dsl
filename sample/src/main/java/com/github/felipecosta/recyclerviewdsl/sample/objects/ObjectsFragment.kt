@@ -1,12 +1,11 @@
 package com.github.felipecosta.recyclerviewdsl.sample.objects
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.github.felipecosta.recyclerviewdsl.R
 import com.github.felipehjcosta.recyclerviewdsl.onRecyclerView
 
@@ -17,8 +16,10 @@ class ObjectsFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.recyclerview_fragment, container, false)
     }
 
@@ -30,7 +31,7 @@ class ObjectsFragment : Fragment() {
 
         onRecyclerView(recyclerView) {
             withLinearLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
             }
 
@@ -45,10 +46,12 @@ class ObjectsFragment : Fragment() {
                     }
 
                     onClick { position, item ->
-                        Toast.makeText(context,
-                                "Position $position clicked for item: ${item?.content}",
-                                Toast.LENGTH_SHORT)
-                                .show()
+                        Toast.makeText(
+                            context,
+                            "Position $position clicked for item: ${item?.content}",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
                     }
                 }
             }
@@ -79,7 +82,7 @@ class ObjectsFragment : Fragment() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
             withLinearLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
             }
         }
@@ -89,7 +92,7 @@ class ObjectsFragment : Fragment() {
         val recyclerView = view!!.findViewById<RecyclerView>(R.id.recycler_view)
         onRecyclerView(recyclerView) {
             withGridLayout {
-                orientation = LinearLayout.VERTICAL
+                orientation = RecyclerView.VERTICAL
                 reverseLayout = false
                 spanCount = 2
             }
