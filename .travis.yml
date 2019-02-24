@@ -43,7 +43,15 @@ before_script:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
-script: gradle/buildViaTravis.sh
+jobs:
+  include:
+  - stage: test
+    script: ./gradlew build lib:jacocoTestReportDebug --console=plain
+    after_success:
+    - bash <(curl -s https://codecov.io/bash)
+  - stage: deploy
+    script: ./gradlew build bintrayUpload -PbintrayUser="${BINTRAY_USER}" -PbintrayKey="${BINTRAY_PASSWORD}" -PdryRun=false --console=plain
+    if: tag IS present
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
