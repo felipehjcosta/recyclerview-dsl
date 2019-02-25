@@ -1,7 +1,20 @@
 # Change Log
 
-## Version Unreleased
+## Version v0.8.0
 ### No issue
+
+**[9b7640bae07f2ed](https://github.com/felipehjcosta/recyclerview-dsl/9b7640bae07f2ed) Bump publishVersion**
+
+
+**[ffa00ee12369788](https://github.com/felipehjcosta/recyclerview-dsl/ffa00ee12369788) Bump bintray-release plugin**
+
+
+**[94276b54342745f](https://github.com/felipehjcosta/recyclerview-dsl/94276b54342745f) Move commands from buildViaTravis.sh to CI yml**
+
+
+**[0854c7c2661a922](https://github.com/felipehjcosta/recyclerview-dsl/0854c7c2661a922) Add a changelog**
+
+ * This file will be generated automatically soon.
 
 **[6234f2dbc647c6f](https://github.com/felipehjcosta/recyclerview-dsl/6234f2dbc647c6f) Migration to Androidx**
 
