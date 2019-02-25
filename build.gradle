@@ -13,8 +13,11 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.13.0"
         classpath 'com.novoda:bintray-release:0.9'
+        classpath "se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.60"
     }
 }
+
+apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 
 allprojects {
     repositories {
@@ -27,4 +30,8 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task generateGitChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    file = new File("CHANGELOG.md")
 }
