@@ -1,0 +1,129 @@
+version: 2
+reference:
+
+  ## Workspaces
+  workspace: &workspace
+               ~/code
+
+  ## Docker image configurations
+  android_config: &android_config
+    working_directory: *workspace
+    docker:
+      - image: circleci/android:api-28
+    environment:
+      TERM: dumb
+      JVM_OPTS: -Xmx3200m
+
+  ## Cache
+  generate_cache_key: &generate_cache_key
+    run:
+      name: Generate cache key
+      command: ./checksum.sh /tmp/checksum.txt
+
+  gradle_key: &gradle_key
+                gradle-{{ checksum "/tmp/checksum.txt" }}
+
+  restore_gradle_cache: &restore_gradle_cache
+    restore_cache:
+      key: *gradle_key
+
+  save_gradle_cache: &save_gradle_cache
+    save_cache:
+      key: *gradle_key
+      paths:
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
+        - ~/.android/build-cache
+
+  ## Dependencies
+  android_dependencies: &android_dependencies
+    run:
+      name: Download Android Dependencies
+      command: ./gradlew androidDependencies
+
+jobs:
+  lint:
+    <<: *android_config
+    steps:
+      - checkout
+      - *generate_cache_key
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - run:
+          name: "Run Lint"
+          command: ./gradlew detekt --console=plain -Dorg.gradle.parallel=false
+
+  test:
+    <<: *android_config
+    steps:
+      - checkout
+      - *generate_cache_key
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - run:
+          name: "Run Tests"
+          command: ./gradlew build lib:jacocoTestReport --console=plain -Dorg.gradle.parallel=false
+        #Codecov integration
+      - run:
+          name: Send to CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
+      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: lib/build/reports
+          destination: reports
+      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: lib/build/test-results
+    # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+
+  build:
+    <<: *android_config
+    steps:
+      - checkout
+      - *generate_cache_key
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - run:
+          name: "Build"
+          command:  ./gradlew build
+
+  deploy:
+    <<: *android_config
+    steps:
+      - checkout
+      - *generate_cache_key
+      - *restore_gradle_cache
+      - *android_dependencies
+      - *save_gradle_cache
+      - run:
+          name: "Deploy to bintray"
+          command:  ./gradlew lib:bintrayUpload -PbintrayUser="${BINTRAY_USER}" -PbintrayKey="${BINTRAY_PASSWORD}" -PdryRun=false
+
+workflows:
+  version: 2
+  test-build-n-deploy:
+    jobs:
+      - lint:
+          filters:
+            tags:
+              only: /.*/
+      - test:
+          filters:
+            tags:
+              only: /.*/
+      - build:
+          requires:
+            - lint
+            - test
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
