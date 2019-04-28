@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.novoda.bintray-release'
 apply plugin: "com.vanniktech.android.junit.jacoco"
+apply plugin: "com.palantir.git-version"
 
 tasks.withType(Javadoc).all {
     enabled = false
@@ -11,7 +12,7 @@ publish {
     userOrg = 'fcostaa'
     groupId = 'com.github.felipehjcosta'
     artifactId = 'recyclerview-dsl'
-    publishVersion = '0.8.0'
+    publishVersion = "${versionDetails().lastTag.replace("v", "")}"
     desc = 'RecyclerViewDSL'
     website = 'https://github.com/felipehjcosta/recyclerview-dsl'
 }
