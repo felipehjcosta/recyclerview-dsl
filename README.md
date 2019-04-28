@@ -1,6 +1,6 @@
 # RecyclerView DSL
 
-[![Build Status](https://travis-ci.org/felipehjcosta/recyclerview-dsl.svg?branch=master)](https://travis-ci.org/felipehjcosta/recyclerview-dsl)
+[![CircleCI](https://circleci.com/gh/felipehjcosta/recyclerview-dsl.svg?style=svg)](https://circleci.com/gh/felipehjcosta/recyclerview-dsl)
 [![codecov](https://codecov.io/gh/felipehjcosta/recyclerview-dsl/branch/master/graph/badge.svg)](https://codecov.io/gh/felipehjcosta/recyclerview-dsl)
 [![codebeat badge](https://codebeat.co/badges/7e1861be-faec-4355-8f04-04abb53fdce0)](https://codebeat.co/projects/github-com-felipehjcosta-recyclerview-dsl-master)
 
